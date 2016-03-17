@@ -1,7 +1,9 @@
+var fs = require('fs') ;
 var http = require('http');
 var requestListener = function (req, res) {
   res.writeHead(200);
-  res.end('Hello, World!\n');
+var data = fs.readFileSync("bitstarter.html");
+  res.end(data);
 }
 
 var server = http.createServer(requestListener);
