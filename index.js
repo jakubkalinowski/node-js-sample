@@ -1,15 +1,26 @@
 var fs = require('fs') ;
 var http = require('http');
+
 var requestListener = function (req, res) {
-  res.writeHead(200);
+    res.writeHead(200);
 
-fs.readFile("bitstarter.html", 'utf8', function (err,data) {
-  if (err) {
-    return console.log(err);
-  }
-  res.end(data);
-});
+    fs.stat("bitstarter.html", function (err, stats) {
 
+	if (err) {
+	    return console.log(err);
+	}
+	fs.open("bitstarter.html", 'r', function (err, fd) {
+	    if (err) {
+		return console.log(err);
+	    }
+	    fs.read(fd, new Buffer(stats.size), 0, stats.size, 0, function (err, bytesRead, buffer) {
+		if (err) {
+		    return console.log(err);
+		}
+		res.end(buffer.toString('utf8'));
+	    });
+         });
+     });
 }
 
 var server = http.createServer(requestListener);
